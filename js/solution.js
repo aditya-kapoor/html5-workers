@@ -5,6 +5,7 @@ this.onmessage = function(event){
   for(i = 0; i < event.data; ++i){
     index = Math.floor(Math.random() * arrayofWords.length)
     finalText += arrayofWords[index] + " "
+    this.postMessage({ 'percentage_completed': Math.floor((i/event.data)*100)})
   }
-  this.postMessage(finalText)
+  this.postMessage({ 'percentage_completed': 100, 'partial_text': finalText })
 }

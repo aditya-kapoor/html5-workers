@@ -2,12 +2,19 @@
   <head>
     <title></title>
     <script src="js/jquery.js"></script>
+    <style type="text/css">
+      #progress{ background-color: #f3f3f3;border: 0;height: 28px;border-radius: 9px;}
+      #progress-container{margin: auto;width: 400px;padding: 50px}
+    </style>
   </head>
   <body>
     <a href="#">Link1</a> | <a href="#">Link1</a> | <a href="#">Link1</a> | <a href="#">Link1</a> | <a href="#">Link1</a> | <a href="#">Link1</a>
     <input type="text" id="num">
     <button id="b1">Generate</button>
     <button id="b2">Terminate</button>
+    <div id="progress-container">
+      <progress id="progress" value="0" max="100"></progress>
+    </div>
     <div id="msg"></div>
     <script type="text/javascript">
       $(function(){
@@ -17,13 +24,17 @@
           value = $('#num').val()
           worker.postMessage(value)
           worker.onmessage = function(event){
-            $('#msg').text(event.data)
+            $('#progress').val(event.data.percentage_completed)
+            if(event.data.partial_text)
+              $('#msg').text(event.data.partial_text)
           }
         })
         $('#b2').click(function(){
           console.log(worker)
-          if(worker)
+          if(worker){
             worker.terminate()
+            worker = null 
+          }
         })
       })
     </script>
