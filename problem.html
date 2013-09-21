@@ -14,10 +14,9 @@
         var worker
         $('#b1').click(function(){
           worker = new Worker("js/solution.js")
-          value = $('#num').val()
-          worker.postMessage(value)
+          worker.postMessage()
           worker.onmessage = function(event){
-            $('#msg').text(event.data)
+            console.log(event.data)
           }
         })
         $('#b2').click(function(){

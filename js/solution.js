@@ -1,10 +1,15 @@
-this.onmessage = function(event){
-  var text  = "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum."
-  var arrayofWords = text.split(" ")
-  var finalText = ""
-  for(i = 0; i < event.data; ++i){
-    index = Math.floor(Math.random() * arrayofWords.length)
-    finalText += arrayofWords[index] + " "
+this.onmessage = function(){
+  worker = this
+  var xhr = new XMLHttpRequest()
+  xhr.onerror = function(){
+    worker.postMessage({error: true, payload: "Event Payload"})
   }
-  this.postMessage(finalText)
+  xhr.onreadystatechanged = function(){
+    worker.postMessage({success: true, payload: "Event Payload"})
+  }
+  xhr.open("GET", "http://search.twitter.com/search.json?q=ruby")
+  xhr.send()
+  // We can use conventional JQuery style but we need to include jquery.js into it but
+  // all the DOM manipulations on success and failure events will take place on main thread only...
+  // Refer http://www.html5rocks.com/en/tutorials/workers/basics/#toc-enviornment-features for more...
 }
